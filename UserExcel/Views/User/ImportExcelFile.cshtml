@@ -1,0 +1,58 @@
+﻿@model UserExcel.Models.UserMst
+@{
+    ViewData["Title"] = "ImportExcelFile";
+}
+
+<h1>ImportExcelFile</h1>
+
+
+
+<div class="container">
+    <div class="row">
+        <div class=" col-4 offset-4">
+            <div class=" form-control">
+              
+                <div class="text-success">
+
+                    @if (ViewBag.message != null)
+                    {
+                        <p class="text-danger" id="message">@ViewBag.message</p>
+                    }
+
+                </div>
+                <form asp-action="ImportExcelFile" method="post" enctype="multipart/form-data" onchange="EnableDisable()">
+                    <div class="mb-2">
+                        <label class="form-label">Upload File</label>
+                        <input type="file" class="form-control" name="formFile" id="file" accept="xlsx,xls" />
+
+                    </div>
+                    <div>
+                        <button type="submit" class=" btn btn-primary" id="submit" disabled="true">Upload</button>
+                        <a class="btn btn-danger  text-white" asp-action="ImportExcelFile">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script>
+
+        function EnableDisable() 
+        {
+            var submit = document.getElementById("submit");
+            var file = document.getElementById("file").value === "" ? false : true;
+            var filled = file;
+            filled ? submit.disabled = false : submit.disabled = true;
+        }
+
+        //debugger;
+
+        setTimeout(function () {
+            $('#message').hide(2000);
+        });
+
+    </script>
+}
+
