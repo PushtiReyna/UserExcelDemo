@@ -30,6 +30,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=User}/{action=ImportExcelFile}/{id?}");
+    pattern: "{controller=User}/{action=GetPDF}/{id?}");
 
 app.Run();

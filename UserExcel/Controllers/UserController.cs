@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using OfficeOpenXml;
 using UserExcel.Models;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace UserExcel.Controllers
 {
@@ -72,6 +73,19 @@ namespace UserExcel.Controllers
                 ViewBag.message = "file not uploaded.";
                 return View();
             }
+        }
+
+        [HttpGet]
+        public string GetDataTable()
+        {
+            var userList = _db.UserMsts.ToList();
+            var result = JsonConvert.SerializeObject( new { data = userList });
+            return result;
+        }
+
+        public IActionResult GetPDF()
+        {
+            return View();
         }
 
     }
