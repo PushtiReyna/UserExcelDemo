@@ -12,6 +12,7 @@ using Microsoft.Win32;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Numerics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 //using iTextSharp.tool.xml;
 
 
@@ -192,6 +193,137 @@ namespace UserExcel.Controllers
             FS.Close();
             TempData["message"] = "PDF download in D Drive";
             return RedirectToAction("GetPDF");
+        }
+
+        public IActionResult Report()
+        {
+            return View();
+        }
+
+        public IActionResult ReportDownload()
+        {
+            Document pdfDoc = new Document(/*PageSize.A4, 25, 25, 25, 15*/);
+
+            if (System.IO.File.Exists("D:\\Report.pdf"))
+            {
+                System.IO.File.Delete("D:\\Report.pdf");
+            }
+            FileStream FS = new FileStream("D:\\CHW.pdf", FileMode.Create);
+
+            PdfWriter pdfWriter = PdfWriter.GetInstance(pdfDoc, FS);
+
+            pdfDoc.Open(); 
+
+            Paragraph header = new Paragraph("Click Heal Weal", new Font(Font.FontFamily.HELVETICA, 19, Font.NORMAL));
+            header.SpacingBefore = 10f;
+            header.IndentationLeft = 50f;
+            pdfDoc.Add(header);
+
+            // CRAETE 1ST TABLE
+            PdfPTable table = new PdfPTable(3);
+            table.WidthPercentage = 100;
+            table.HorizontalAlignment = 20;
+            table.SpacingBefore = 20f;
+            table.SpacingAfter = 30f;
+
+            PdfPCell cell = new PdfPCell();
+            cell = new PdfPCell();
+            Chunk chunk = new Chunk("Summary Report",new Font(Font.FontFamily.HELVETICA, 22, Font.BOLD));
+            cell.AddElement(chunk);
+            cell.Colspan = 3;
+            cell.HorizontalAlignment = Element.ALIGN_CENTER;
+            cell.BorderColor = BaseColor.BLACK;
+
+            table.AddCell(cell);
+            pdfDoc.Add(table);
+
+            //CREATE 2ND TABLE
+            table = new PdfPTable(7);
+            table.WidthPercentage = 100;
+            table.HorizontalAlignment = 0;
+
+           // Create HEADER
+            cell = new PdfPCell();
+            Paragraph Header =new Paragraph("Patient Information", new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL));
+            cell.AddElement(Header);
+            cell.Colspan = 3;
+            cell.BorderColor = BaseColor.BLACK;
+            table.AddCell(cell);
+
+            cell = new PdfPCell();
+            Header = new Paragraph("Physician Information", new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL));
+            cell.AddElement(Header);
+            cell.BorderColor = BaseColor.BLACK;
+            table.AddCell(cell);
+
+            cell = new PdfPCell();
+            Header = new Paragraph("Appointment Information", new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL));
+            cell.AddElement(Header);
+            cell.Colspan = 5;
+            cell.BorderColor = BaseColor.BLACK;
+            table.AddCell(cell);
+
+            //create sub header
+            cell = new PdfPCell();
+            Paragraph subHeader = new Paragraph("First Name", new Font(Font.FontFamily.HELVETICA, 11, Font.BOLD));
+            cell.AddElement(subHeader);
+            table.AddCell(cell);
+
+            cell = new PdfPCell();
+            subHeader = new Paragraph("Last Name", new Font(Font.FontFamily.HELVETICA, 11, Font.BOLD));
+            cell.AddElement(subHeader);
+            table.AddCell(cell);
+
+            cell = new PdfPCell();
+            subHeader = new Paragraph("Dignosis", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
+            cell.AddElement(subHeader);
+            table.AddCell(cell);
+
+            cell = new PdfPCell();
+            subHeader = new Paragraph("Name", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
+            cell.AddElement(subHeader);
+            table.AddCell(cell);
+
+            cell = new PdfPCell();
+            subHeader = new Paragraph("Date", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
+            cell.AddElement(subHeader);
+            table.AddCell(cell);
+
+            cell = new PdfPCell();
+            subHeader = new Paragraph("Time", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
+            cell.AddElement(subHeader);
+            table.AddCell(cell);
+
+            cell = new PdfPCell();
+            subHeader = new Paragraph("Loction", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
+            cell.AddElement(subHeader);
+            table.AddCell(cell);
+
+            //table.AddCell("First Name");
+            //table.AddCell("Last Name");
+            //table.AddCell("Dignosis");
+            //table.AddCell("Name");
+            //table.AddCell("Date");
+            //table.AddCell("Time");
+            //table.AddCell("Loction");
+           
+            table.AddCell("Jhon");
+            table.AddCell("Deo");
+            table.AddCell("Hypertension");
+            table.AddCell("Jhon");
+            table.AddCell("28 / 07 / 2022");
+            table.AddCell("01:00");
+            table.AddCell("Vadodara");
+
+            pdfDoc.Add(table);
+
+            pdfWriter.CloseStream = false;
+            pdfDoc.Close();
+
+            FS.Close();
+            TempData["message"] = "PDF download in D Drive";
+
+            return RedirectToAction("Report");
         }
     }
 

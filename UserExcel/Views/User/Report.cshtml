@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewData["Title"] = "Report";
+}
+
+<h1>Report</h1>
+
+<div class="mb-4">
+    <div class="text-success">
+        @if (TempData["message"] != null)
+        {
+            <p class="text-danger">@TempData["message"]</p>
+        }
+    </div>
+
+    <form asp-action="ReportDownload" method="post">
+
+        <button type="submit" class="btn btn-primary btn-lg" id="submitButton">PDF</button>
+
+    </form>
+
+</div>
+
