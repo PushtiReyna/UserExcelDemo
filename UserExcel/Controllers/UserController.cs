@@ -131,15 +131,23 @@ namespace UserExcel.Controllers
 
             pdfDoc.Open();
 
-            Paragraph header = new Paragraph("Registration Form"); 
+            Paragraph header = new Paragraph("Registration Form", new Font(Font.FontFamily.HELVETICA,16,Font.BOLD));
+            header.SpacingBefore = 10f;
+            header.SpacingAfter = 10f;
+            header.IndentationLeft = 200f;
             pdfDoc.Add(header);
 
             Paragraph para = new Paragraph();
             para.Add("Date: 4th September 2023\r\n");
+            para.SpacingAfter = 20f;
+            para.IndentationLeft = 350f;
+            para.IndentationRight = 20f;
             pdfDoc.Add(para);
 
             para = new Paragraph();
             para.Add("Create registration form which contain following fields.");
+            para.SpacingAfter = 10f;
+            para.IndentationLeft = 50f;
             pdfDoc.Add(para);
 
             List list = new List(List.ORDERED);
@@ -155,18 +163,27 @@ namespace UserExcel.Controllers
             list.Add(new ListItem("Password     : 12@Patel"));
             list.Add(new ListItem("Department   : CSE"));
             list.Add(new ListItem("Is Active    : Active"));
+            list.IndentationLeft = 50f;
+            list.IndentationRight = 100f;
             pdfDoc.Add(list);          
 
             para = new Paragraph();
             para.Add("Create database using required field -MS SQL server.");
+            para.SpacingBefore = 10f;
+            para.SpacingAfter = 10f;
+            para.IndentationLeft = 50f;
             pdfDoc.Add(para);
 
             para = new Paragraph();
             para.Add("Create page using proper validation and design.");
+            para.SpacingAfter = 10f;
+            para.IndentationLeft = 50f;
             pdfDoc.Add(para);
 
             para = new Paragraph();
             para.Add("Complete task before EOD");
+            para.SpacingAfter = 10f;
+            para.IndentationLeft = 50f;
             pdfDoc.Add(para);
 
             pdfWriter.CloseStream = false;
