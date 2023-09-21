@@ -4,16 +4,83 @@
 
 <h1>GetPDF</h1>
 
-@section Scripts
+@*<div id="PrintPDF">
+    <div class="container">
+        <div class="row">
+    <h1 class="text-md-center">
+        Registration Form
+    </h1>
+
+    <div class="row-end-auto">
+        <h5 class="text-right" style="float: right;">Date: 4th September 2023 </h5>
+    </div>
+   
+    <div class="text-center">
+        <ul>
+            <li>
+                <label>First Name : XYZ </label>
+            </li>
+            <li>
+                <label>Last Name : XYZ </label>
+            </li>
+            <li>
+                <label>DOB : XYZ </label>
+            </li>
+            <li>
+                <label>Gender : XYZ </label>
+            </li>
+            <li>
+                <label>Email : XYZ </label>
+            </li>
+            <li>
+                <label>Phone : XYZ </label>
+            </li>
+            <li>
+                <label>Username : XYZ </label>
+            </li>
+            <li>
+                <label>Password : XYZ </label>
+            </li>
+            <li>
+                <label>Department : XYZ </label>
+            </li>
+            <li>
+                <checkbox name="Is Active" checked></checkbox>
+            </li>
+        </ul>
+
+    </div>
+    </div>
+    </div>
+</div>
+<br />*@
+
+<div class="mb-4">
+    <div class="text-success">
+        @if (TempData["message"] != null)
+        {
+            <p class="text-danger">@TempData["message"]</p>
+        }
+    </div>
+    <form asp-action="PDFDownload" method="post">
+        @*<input type="hidden" name="ExportData" />*@
+      
+        <button type="submit" class="btn btn-primary btn-lg" id="submitButton">PDF</button>
+
+    </form>
+</div>
+
+@*@section Scripts
     {
     <script type="text/javascript">
 
+
         $(document).ready(function () {
 
-            dom: 'Bfrtip',
-                buttons: [
-                    'copy',
-                ]
+            // debugger;
+            $("#submitButton").click(function () {
+                $("input[name='ExportData']").val($("#PrintPDF").html());
+            });
         });
     </script>
-    }
+    }*@

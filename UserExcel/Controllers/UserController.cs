@@ -4,6 +4,16 @@ using OfficeOpenXml;
 using UserExcel.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
+using NuGet.Protocol;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Win32;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Numerics;
+//using iTextSharp.tool.xml;
+
 
 namespace UserExcel.Controllers
 {
@@ -11,11 +21,12 @@ namespace UserExcel.Controllers
     {
         private readonly UserDbContext _db;
         private readonly IConfiguration _configuration;
-
-        public UserController(UserDbContext db, IConfiguration configuration)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public UserController(UserDbContext db, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             _db = db;
             _configuration = configuration;
+            _webHostEnvironment = webHostEnvironment;
         }
         [HttpGet]
         public IActionResult ImportExcelFile()
@@ -83,11 +94,90 @@ namespace UserExcel.Controllers
             return result;
         }
 
+        [HttpGet]
         public IActionResult GetPDF()
         {
             return View();
         }
+        //create pdf of the view.
+        // [HttpPost]
+        //public IActionResult GetPDF(string ExportData)
+        //{
+        //    using (MemoryStream stream = new System.IO.MemoryStream())
+        //    {
+        //        StringReader reader = new StringReader(ExportData);
+        //        Document PdfFile = new Document(PageSize.A4);
+        //        PdfWriter writer = PdfWriter.GetInstance(PdfFile, stream);
+        //        PdfFile.Open();
+        //        XMLWorkerHelper.GetInstance().ParseXHtml(writer, PdfFile, reader);
+        //        PdfFile.Close();
+        //        return File(stream.ToArray(), "application/pdf", "ExportData.pdf");
+        //    }
+        //}
 
+        [HttpPost]
+        public ActionResult PDFDownload()
+        {
+            
+            Document pdfDoc = new Document(PageSize.A4, 25, 25, 25, 15);
+            
+            if (System.IO.File.Exists("D:\\Example.pdf"))
+            {
+                System.IO.File.Delete("D:\\Example.pdf");
+            }
+            FileStream FS = new FileStream("D:\\Example.pdf", FileMode.Create);
+           
+            PdfWriter pdfWriter = PdfWriter.GetInstance(pdfDoc, FS);
+
+            pdfDoc.Open();
+
+            Paragraph header = new Paragraph("Registration Form"); 
+            pdfDoc.Add(header);
+
+            Paragraph para = new Paragraph();
+            para.Add("Date: 4th September 2023\r\n");
+            pdfDoc.Add(para);
+
+            para = new Paragraph();
+            para.Add("Create registration form which contain following fields.");
+            pdfDoc.Add(para);
+
+            List list = new List(List.ORDERED);
+           
+            list.Add(new ListItem("First Name : Drashti"));
+            
+            list.Add(new ListItem("Last Name  : Patel"));
+            list.Add(new ListItem("DOB          : 01/01/2001"));
+            list.Add(new ListItem("Gender       : Female"));
+            list.Add(new ListItem("Email        : drashti@gmail.com"));
+            list.Add(new ListItem("Phone        : 9898083705"));
+            list.Add(new ListItem("Username     : Drashti12"));
+            list.Add(new ListItem("Password     : 12@Patel"));
+            list.Add(new ListItem("Department   : CSE"));
+            list.Add(new ListItem("Is Active    : Active"));
+            pdfDoc.Add(list);          
+
+            para = new Paragraph();
+            para.Add("Create database using required field -MS SQL server.");
+            pdfDoc.Add(para);
+
+            para = new Paragraph();
+            para.Add("Create page using proper validation and design.");
+            pdfDoc.Add(para);
+
+            para = new Paragraph();
+            para.Add("Complete task before EOD");
+            pdfDoc.Add(para);
+
+            pdfWriter.CloseStream = false;
+            pdfDoc.Close();
+
+            FS.Close();
+            TempData["message"] = "PDF download in D Drive";
+            return RedirectToAction("GetPDF");
+        }
     }
 
 }
+
+

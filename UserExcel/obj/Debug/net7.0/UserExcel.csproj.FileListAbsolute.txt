@@ -256,3 +256,5 @@ D:\project\UserExcelDemo\UserExcelDemo\UserExcel\bin\Debug\net7.0\runtimes\win\l
 D:\project\UserExcelDemo\UserExcelDemo\UserExcel\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Security.Cryptography.Pkcs.dll
 D:\project\UserExcelDemo\UserExcelDemo\UserExcel\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 D:\project\UserExcelDemo\UserExcelDemo\UserExcel\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+D:\project\UserExcelDemo\UserExcelDemo\UserExcel\bin\Debug\net7.0\BouncyCastle.Crypto.dll
+D:\project\UserExcelDemo\UserExcelDemo\UserExcel\bin\Debug\net7.0\itextsharp.dll
