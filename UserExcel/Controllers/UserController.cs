@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Numerics;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Data;
+using OfficeOpenXml.Style;
+using Microsoft.EntityFrameworkCore.Metadata;
 //using iTextSharp.tool.xml;
 
 
@@ -202,22 +205,28 @@ namespace UserExcel.Controllers
 
         public IActionResult ReportDownload()
         {
-            Document pdfDoc = new Document(/*PageSize.A4, 25, 25, 25, 15*/);
+            Document pdfDoc = new Document(PageSize.A4, 25, 25, 25, 15);
 
-            if (System.IO.File.Exists("D:\\Report.pdf"))
+            if (System.IO.File.Exists("D:\\CHW.pdf"))
             {
-                System.IO.File.Delete("D:\\Report.pdf");
+                System.IO.File.Delete("D:\\CHW.pdf");
             }
             FileStream FS = new FileStream("D:\\CHW.pdf", FileMode.Create);
 
             PdfWriter pdfWriter = PdfWriter.GetInstance(pdfDoc, FS);
 
-            pdfDoc.Open(); 
+            pdfDoc.Open();
+
+            #region Title
 
             Paragraph header = new Paragraph("Click Heal Weal", new Font(Font.FontFamily.HELVETICA, 19, Font.NORMAL));
             header.SpacingBefore = 10f;
             header.IndentationLeft = 50f;
             pdfDoc.Add(header);
+
+            #endregion
+
+            #region 1st table
 
             // CRAETE 1ST TABLE
             PdfPTable table = new PdfPTable(3);
@@ -226,96 +235,192 @@ namespace UserExcel.Controllers
             table.SpacingBefore = 20f;
             table.SpacingAfter = 30f;
 
+
             PdfPCell cell = new PdfPCell();
-            cell = new PdfPCell();
-            Chunk chunk = new Chunk("Summary Report",new Font(Font.FontFamily.HELVETICA, 22, Font.BOLD));
-            cell.AddElement(chunk);
-            cell.Colspan = 3;
-            cell.HorizontalAlignment = Element.ALIGN_CENTER;
-            cell.BorderColor = BaseColor.BLACK;
 
-            table.AddCell(cell);
+            PdfPCell Title = new PdfPCell(new Phrase("Summary Report", new Font(Font.FontFamily.HELVETICA, 22, Font.BOLD)));
+            Title.HorizontalAlignment = Element.ALIGN_CENTER;
+            //cell.AddElement(Title);
+            Title.Colspan = 3;
+            Title.HorizontalAlignment = 1;
+            Title.EnableBorderSide(10);
+            Title.BorderColor = BaseColor.BLACK;
+
+            //cell = new PdfPCell();
+            //Paragraph Title = new Paragraph("Summary Report",new Font(Font.FontFamily.HELVETICA, 22, Font.BOLD));
+            //cell.AddElement(Title);
+            //cell.Colspan = 3;
+            //cell.HorizontalAlignment = 1;
+            //cell.EnableBorderSide(10);
+            //cell.BorderColor = BaseColor.BLACK;
+           
+            table.AddCell(Title);
             pdfDoc.Add(table);
+            #endregion
 
+            #region 2nd table
             //CREATE 2ND TABLE
-            table = new PdfPTable(7);
-            table.WidthPercentage = 100;
-            table.HorizontalAlignment = 0;
+            
+            //  Table - Patient Information
+            PdfPTable SecondTable = new PdfPTable(3);
+            SecondTable.TotalWidth = 178f;
+            SecondTable.LockedWidth = true;
 
-           // Create HEADER
             cell = new PdfPCell();
-            Paragraph Header =new Paragraph("Patient Information", new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL));
+            Paragraph Header = new Paragraph("Patient Information", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
             cell.AddElement(Header);
             cell.Colspan = 3;
+            cell.HorizontalAlignment = 1;
             cell.BorderColor = BaseColor.BLACK;
-            table.AddCell(cell);
-
-            cell = new PdfPCell();
-            Header = new Paragraph("Physician Information", new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL));
-            cell.AddElement(Header);
-            cell.BorderColor = BaseColor.BLACK;
-            table.AddCell(cell);
-
-            cell = new PdfPCell();
-            Header = new Paragraph("Appointment Information", new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL));
-            cell.AddElement(Header);
-            cell.Colspan = 5;
-            cell.BorderColor = BaseColor.BLACK;
-            table.AddCell(cell);
+           
+            SecondTable.AddCell(cell);
 
             //create sub header
             cell = new PdfPCell();
             Paragraph subHeader = new Paragraph("First Name", new Font(Font.FontFamily.HELVETICA, 11, Font.BOLD));
             cell.AddElement(subHeader);
-            table.AddCell(cell);
+            SecondTable.AddCell(cell);
 
             cell = new PdfPCell();
             subHeader = new Paragraph("Last Name", new Font(Font.FontFamily.HELVETICA, 11, Font.BOLD));
             cell.AddElement(subHeader);
-            table.AddCell(cell);
+            SecondTable.AddCell(cell);
 
             cell = new PdfPCell();
             subHeader = new Paragraph("Dignosis", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
             cell.AddElement(subHeader);
-            table.AddCell(cell);
+            SecondTable.AddCell(cell);
+
+            SecondTable.AddCell("jhon");
+            SecondTable.AddCell("deo");
+            SecondTable.AddCell("hypertension");
+            SecondTable.WriteSelectedRows(0, -1, pdfDoc.Left, pdfDoc.Top - 100, pdfWriter.DirectContent);
+
+
+            //  Table - Physician Information
+            SecondTable = new PdfPTable(1);
+            SecondTable.TotalWidth = 178f;
+            SecondTable.LockedWidth = true;
+
+            cell = new PdfPCell();
+            Header = new Paragraph("Physician Information", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
+            cell.AddElement(Header);
+            cell.BorderColor = BaseColor.BLACK;
+            cell.HorizontalAlignment = 0;
+            
+            SecondTable.AddCell(cell);
 
             cell = new PdfPCell();
             subHeader = new Paragraph("Name", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
             cell.AddElement(subHeader);
-            table.AddCell(cell);
+            SecondTable.AddCell(cell);
+
+            SecondTable.AddCell("Jhon");
+            SecondTable.WriteSelectedRows(0, -1, pdfDoc.Left + 183, pdfDoc.Top - 100, pdfWriter.DirectContent);
+
+
+            //  Table - Appointment Information
+            SecondTable = new PdfPTable(3);
+            SecondTable.TotalWidth = 178f;
+            SecondTable.LockedWidth = true;
+
+            cell = new PdfPCell();
+            Header = new Paragraph("Appointment Information", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
+            cell.AddElement(Header);
+            cell.Colspan = 3;
+            cell.BorderColor = BaseColor.BLACK;
+            cell.HorizontalAlignment = 2;
+        
+            SecondTable.AddCell(cell);
 
             cell = new PdfPCell();
             subHeader = new Paragraph("Date", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
             cell.AddElement(subHeader);
-            table.AddCell(cell);
+            SecondTable.AddCell(cell);
 
             cell = new PdfPCell();
             subHeader = new Paragraph("Time", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
             cell.AddElement(subHeader);
-            table.AddCell(cell);
+            SecondTable.AddCell(cell);
 
             cell = new PdfPCell();
             subHeader = new Paragraph("Loction", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
             cell.AddElement(subHeader);
-            table.AddCell(cell);
+            
+            SecondTable.AddCell(cell);
 
-            //table.AddCell("First Name");
-            //table.AddCell("Last Name");
-            //table.AddCell("Dignosis");
-            //table.AddCell("Name");
-            //table.AddCell("Date");
-            //table.AddCell("Time");
-            //table.AddCell("Loction");
+            cell = new PdfPCell();
+            Paragraph data = new Paragraph("28 / 07 / 2022");
+            cell.AddElement(data);
+            
+            SecondTable.AddCell(cell);
+
+            cell = new PdfPCell();
+            data = new Paragraph("01:00");
+            cell.AddElement(data);
+            
+            SecondTable.AddCell(cell);
+
+            cell = new PdfPCell();
+            data = new Paragraph("Vadodara");
+            cell.AddElement(data);
+            
+            SecondTable.AddCell(cell);
+
+            
+            SecondTable.WriteSelectedRows(0, -1, pdfDoc.Left + 366, pdfDoc.Top - 100, pdfWriter.DirectContent);
+
+            #endregion
+
+            #region 3rd Table
+
+
+            PdfPTable UserTable = new PdfPTable(3);
+            UserTable.WidthPercentage = 100;
+            UserTable.HorizontalAlignment = 20;
+            UserTable.SpacingBefore = 100f;
+            UserTable.SpacingAfter = 30f;
            
-            table.AddCell("Jhon");
-            table.AddCell("Deo");
-            table.AddCell("Hypertension");
-            table.AddCell("Jhon");
-            table.AddCell("28 / 07 / 2022");
-            table.AddCell("01:00");
-            table.AddCell("Vadodara");
 
-            pdfDoc.Add(table);
+            cell = new PdfPCell();
+            Paragraph UserHeader = new Paragraph("First Name", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
+            cell.AddElement(UserHeader);
+            UserTable.AddCell(cell);
+
+            cell = new PdfPCell();
+            UserHeader = new Paragraph("Middle Name", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
+            cell.AddElement(UserHeader);
+            UserTable.AddCell(cell);
+
+            cell = new PdfPCell();
+            UserHeader = new Paragraph("Last Name", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
+            cell.AddElement(UserHeader);
+            UserTable.AddCell(cell);
+            
+
+            string connect = "Server=ARCHE-ITD440\\SQLEXPRESS;Database=UserDB;Trusted_Connection=True;TrustServerCertificate=True;";
+
+            using (SqlConnection conn = new SqlConnection(connect))
+
+            {
+                string query = "SELECT FirstName, MiddleName, LastName FROM UserMst";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+                using (SqlDataReader rdr = cmd.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        UserTable.AddCell(rdr[0].ToString());
+                        UserTable.AddCell(rdr[1].ToString());
+                        UserTable.AddCell(rdr[2].ToString());
+                    }
+                  
+                }
+                pdfDoc.Add(UserTable);
+       
+            }
+
+            #endregion
 
             pdfWriter.CloseStream = false;
             pdfDoc.Close();
